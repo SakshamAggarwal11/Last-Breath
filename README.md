@@ -20,6 +20,35 @@ The game scales difficulty not by literal stat multiplication, but through reduc
 - **Levels 61-90 (Psychological Warfare)**: Inverted gravity, sensory deprivation (lights off), reversed controls, and hyper-speed obstacles.
 - **Levels 91-100 (The Impossible Realm)**: Frame-perfect requirements, ascending void/lava, invisible walls, and zero checkpoints. Level 100 is a flawless 3-minute sequence of pixel-perfect execution.
 
-## 🎮 Development
+## 🏗️ Architecture & Tech Stack
 
-This project is currently under development. Please refer to `GDD.md` (Game Design Document) for more in-depth details on the mechanics and progression.
+"The Hundredth Fall" is composed of multiple interconnected systems:
+
+- **Game Engine (Core Gameplay)**: Built using C# (`Scripts/ParkourController.cs`, `DifficultyManager.cs`), handling the physics, parkour mechanics, and dynamic difficulty scaling.
+- **Backend Service**: A Node.js and Express server (`/backend/server.js`) that manages the global leaderboard using an SQLite database (`database.sqlite`). It exposes RESTful APIs to submit and retrieve player scores.
+- **Frontend Dashboard**: A fast, responsive web interface built with React and Vite (`/frontend`). This serves as the public-facing leaderboard and player stat tracking dashboard.
+
+## 📁 Project Structure
+
+```text
+TheHundredthFall/
+├── Scripts/         # Core C# gameplay scripts (Parkour mechanics, Difficulty management)
+├── backend/         # Node.js/Express server for API and SQLite database
+├── frontend/        # React + Vite web application for the leaderboard UI
+├── GDD.md           # Master Game Design Document with complete mechanics
+└── README.md        # Project overview and setup instructions
+```
+
+## 🎮 Development & Setup
+
+### Running the Backend (Leaderboard API)
+1. Navigate to the `backend/` directory: `cd backend`
+2. Install dependencies: `npm install`
+3. Start the server: `node server.js` (Runs on `http://localhost:5000`)
+
+### Running the Frontend (Web Dashboard)
+1. Navigate to the `frontend/` directory: `cd frontend`
+2. Install dependencies: `npm install`
+3. Start the Vite development server: `npm run dev`
+
+*For more in-depth details on the game's mechanics, level design, and progression philosophy, refer to the `GDD.md` file.*
