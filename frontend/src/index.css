@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;700;900&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  user-select: none;
+}
+
+body, html, #root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #050508;
+  color: #fff;
+}
+
+.app-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+}
+.game-canvas.hidden { display: none; }
+.game-canvas.visible { display: block; }
+
+/* Ghost Mode Effects */
+.ghost-invert {
+  filter: invert(1) hue-rotate(180deg) contrast(1.5);
+}
+
+.glitch-mode {
+  animation: crtFlicker 0.15s infinite alternate;
+}
+
+@keyframes crtFlicker {
+  0% { transform: translate(1px, 1px); filter: drop-shadow(2px 0 0 red); }
+  50% { transform: translate(-1px, -2px); filter: drop-shadow(-2px 0 0 blue); }
+  100% { transform: translate(-2px, 1px); filter: drop-shadow(0 2px 0 green); }
+}
+
+/* UI Overlays */
+.ui-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at 50% 50%, #1a1a24 0%, #000 100%);
+}
+
+.ui-overlay.scrollable {
+  overflow-y: auto;
+  justify-content: flex-start;
+  padding: 4rem 2rem;
+}
+
+.menu-content {
+  text-align: center;
+  animation: floatIn 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes floatIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.title-main {
+  font-family: 'Creepster', cursive;
+  font-size: 10rem;
+  font-weight: 400;
+  color: #fff;
+  letter-spacing: 5px;
+  line-height: 1;
+  text-shadow: 4px 4px 0px #900, -4px -4px 0px #f00;
+  margin-bottom: 1rem;
+}
+
+/* Text Glitch Effect */
+.glitch {
+  position: relative;
+}
+.glitch::before, .glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0.8;
+}
+.glitch::before {
+  color: #0ff;
+  z-index: -1;
+  animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+.glitch::after {
+  color: #f00;
+  z-index: -2;
+  animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
+}
+@keyframes glitch-anim {
+  0% { transform: translate(0); }
+  20% { transform: translate(-3px, 3px); }
+  40% { transform: translate(-3px, -3px); }
+  60% { transform: translate(3px, 3px); }
+  80% { transform: translate(3px, -3px); }
+  100% { transform: translate(0); }
+}
+
+.subtitle {
+  color: #888;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  margin-bottom: 4rem;
+}
+
+.start-button {
+  padding: 1.5rem 4rem;
+  background: transparent;
+  border: 4px solid #900;
+  color: #f00;
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 8px;
+  box-shadow: inset 0 0 20px #900, 0 0 20px #900;
+}
+.start-button:hover {
+  background: #900;
+  color: #fff;
+}
+
+/* Roadmap Grid */
+.title-roadmap {
+  font-size: 4rem;
+  color: #f00;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 15px;
+  max-width: 900px;
+  margin-bottom: 3rem;
+}
+
+.roadmap-node {
+  width: 60px;
+  height: 60px;
+  background: #222;
+  border: 2px solid #555;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 900;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.roadmap-node:not(.locked):hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #fff;
+}
+
+.roadmap-node.locked {
+  background: #111;
+  color: #333;
+  border-color: #222;
+  cursor: not-allowed;
+}
+
+.roadmap-node.ghost-node {
+  border-color: #f00;
+  color: #f00;
+  box-shadow: 0 0 10px #f00;
+  text-shadow: 0 0 5px #f00;
+}
+.roadmap-node.ghost-node:not(.locked):hover {
+  background: #f00;
+  color: #fff;
+  box-shadow: 0 0 30px #f00;
+}
+
+.neon-button-small {
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* HUD */
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.game-title-hud {
+  font-family: 'Creepster', cursive;
+  font-size: 2rem;
+  color: #fff;
+  letter-spacing: 5px;
+  text-shadow: 2px 2px 0px #900;
+  margin-bottom: 0.5rem;
+}
+
+.level-indicator {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.ghost-text {
+  color: #f00;
+  font-family: 'Creepster', cursive;
+}
+
+.death-counter {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ff2a2a;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skull-icon {
+  font-size: 3.5rem;
+}
+
+.instructions {
+  position: absolute;
+  bottom: 2rem;
+  width: 100vw;
+  text-align: center;
+  color: rgba(255,255,255,0.5);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Screen Flash */
+.flash-red {
+  position: absolute;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #f00;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+  animation: flash 0.3s ease-out;
+}
+
+@keyframes flash {
+  0% { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+/* HUD Controls */
+.hud-controls {
+  display: flex;
+  gap: 15px;
+}
+
+.skip-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: #050508;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 50px;
+}
+
+.hint-popup {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid #f00;
+  color: #f00;
+  padding: 15px 30px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px #f00;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.hint-btn { border-color: #0ff; color: #0ff; }
+.hint-btn:hover { background: rgba(0,255,255,0.2); box-shadow: 0 0 10px #0ff; }
+.skip-btn { border-color: #f0f; color: #f0f; }
+.skip-btn:hover { background: rgba(255,0,255,0.2); box-shadow: 0 0 10px #f0f; }
