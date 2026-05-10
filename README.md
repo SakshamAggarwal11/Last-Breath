@@ -39,16 +39,82 @@ TheHundredthFall/
 └── README.md        # Project overview and setup instructions
 ```
 
-## 🎮 Development & Setup
+## 🛠️ Step-by-Step Setup Guide
 
-### Running the Backend (Leaderboard API)
-1. Navigate to the `backend/` directory: `cd backend`
-2. Install dependencies: `npm install`
-3. Start the server: `node server.js` (Runs on `http://localhost:5000`)
+Follow these instructions to get the full environment (Game, Backend, and Frontend) running locally.
 
-### Running the Frontend (Web Dashboard)
-1. Navigate to the `frontend/` directory: `cd frontend`
-2. Install dependencies: `npm install`
-3. Start the Vite development server: `npm run dev`
+### 📋 Prerequisites
+Ensure you have the following installed:
+- **Node.js** (v18 or higher) & **npm**
+- **Unity Hub** & **Unity Editor** (2022.3 LTS or higher recommended)
+- **Git**
 
-*For more in-depth details on the game's mechanics, level design, and progression philosophy, refer to the `GDD.md` file.*
+---
+
+### 🎮 1. Unity Game Setup (Core Gameplay)
+The scripts in `/Scripts` are designed for a Unity 3D project.
+
+1. **Create/Open Unity Project**: Open your Unity project or create a new 3D project.
+2. **Import Scripts**: Copy the `Scripts/` folder into your Unity `Assets/` directory.
+3. **Player Setup**:
+    - Create a **Capsule** in your scene to represent the player.
+    - Add a **Rigidbody** component to the capsule.
+    - Attach the `ParkourController.cs` script to the capsule.
+    - Set the Rigidbody's **Interpolate** setting to `Interpolate` for smooth movement.
+    - In the `ParkourController` inspector, adjust speed, jump force, and dash settings as desired.
+4. **Environment Setup**:
+    - Ensure your floor and walls have **Colliders**.
+    - The `ParkourController` uses raycasts for ground and wall detection. Ensure walls are vertical enough for the side-raycasts to hit.
+5. **Difficulty Management**:
+    - The `DifficultyManager.cs` is a **static utility class**. You don't need to attach it to a GameObject.
+    - Other scripts (like the level generator or player) can call its methods directly: `DifficultyManager.GetCoyoteTime(currentLevel)`.
+
+---
+
+### 💻 2. Backend Setup (Leaderboard API)
+The backend manages player scores using an Express server and SQLite.
+
+1. **Navigate to Backend**:
+   ```bash
+   cd backend
+   ```
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Run the Server**:
+   ```bash
+   node server.js
+   ```
+   - The server will start on `http://localhost:5000`.
+   - It will automatically create a `database.sqlite` file and the `leaderboard` table if they don't exist.
+
+---
+
+### 🌐 3. Frontend Setup (Web Dashboard)
+The frontend displays the global leaderboard using React and Vite.
+
+1. **Navigate to Frontend**:
+   ```bash
+   cd frontend
+   ```
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Configure API Endpoint** (Optional):
+   - Ensure the frontend is pointing to the correct backend URL (default is `http://localhost:5000`).
+4. **Start Development Server**:
+   ```bash
+   npm run dev
+   ```
+   - Open your browser to the URL provided by Vite (usually `http://localhost:5173`).
+
+---
+
+### 🔗 4. Connecting Game to Backend
+To send scores from Unity to the Backend:
+- Use Unity's `UnityWebRequest` to send a **POST** request to `http://localhost:5000/api/score`.
+- JSON Body: `{ "playerName": "YourName", "levelReached": 42 }`.
+
+*For the complete game logic and progression philosophy, refer to the [GDD.md](file:///Users/saksham/Documents/TheHundredthFall/GDD.md) file.*
